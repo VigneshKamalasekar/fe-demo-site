@@ -1,318 +1,1097 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VWO Demo App</title>
-  <!-- VWO FME SDK (Client-side) -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vwo-fme-node-sdk@1/dist/client/vwo-fme-javascript-sdk.min.js"></script>
-  <!-- Configuration and setup -->
-  <script src="./vwo-config.js"></script>
-  <script src="./vwo-setup.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrandName</title>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    * {
       margin: 0;
-    }
-    .phone-frame {
-      width: 375px;
-      height: 667px;
-      border: 16px solid #333;
-      border-radius: 36px;
-      background-color: white;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-    .notch {
-      width: 210px;
-      height: 30px;
-      background-color: #333;
-      border-radius: 0 0 20px 20px;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-    .banner-container {
-      margin-top: 40px;
-      padding: 15px 15px 25px 15px;
+      padding: 0;
       box-sizing: border-box;
     }
-    .banner-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-    }
-    .banner-container img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-      flex-shrink: 0;
-    }
-    .banner-text {
-      padding: 16px 20px 20px 20px;
-      text-align: center;
-      background: white;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .banner-text h1 {
-      margin: 0 0 8px 0;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .banner-text p {
-      margin: 0 0 16px 0;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .cta-button {
-      display: inline-block;
-      padding: 10px 20px;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      background: #4285F4;
-      transition: background-color 0.2s;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
-    }
-    .cta-button:hover {
-      background: #3367D6;
-      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.4);
-    }
-    .accordion {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
-    .accordion-header {
-      background-color: #e0e0e0;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-    }
-    .accordion-content {
-      display: none;
-      padding: 10px;
-      background-color: #f9f9f9;
-    }
-    .accordion-content input {
-      width: 90%;
-      margin: 5px 0;
-      padding: 5px;
-    }
-    .save-button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 14px;
-      transition: background-color 0.2s;
-    }
-    .save-button:hover {
-      background: #45a049;
-    }
-    .error-message {
-      color: #d32f2f;
-      text-align: center;
-      padding: 20px;
-      background-color: #ffebee;
-      border-radius: 4px;
-      margin: 10px;
+
+    :root {
+      --primary: #1769e0;
+      --primary-dark: #0d3b70;
+      --text: #10233f;
+      --muted: #667085;
+      --light-bg: #f4f8ff;
+      --white: #ffffff;
+      --border: #dce4ef;
     }
 
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+      background: var(--white);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      height: 74px;
+      padding: 0 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--white);
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 38px;
+    }
+
+    .nav a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      transition: 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--primary);
+    }
+
+    .nav .nav-cta {
+      padding: 12px 22px;
+      background: var(--primary);
+      color: white;
+      border-radius: 6px;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 510px;
+      display: flex;
+      align-items: center;
+      padding: 70px 6%;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.96) 0%,
+        rgba(255,255,255,0.88) 42%,
+        rgba(255,255,255,0.15) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.12;
+      margin-bottom: 22px;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #344054;
+      margin-bottom: 32px;
+      max-width: 500px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .primary-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 14px 26px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .secondary-btn {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* =========================
+       ABOUT / CONTENT
+    ========================= */
+
+    .about {
+      padding: 70px 6%;
+      text-align: center;
+    }
+
+    .section-label {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .about h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .about-intro {
+      max-width: 680px;
+      margin: 0 auto 55px;
+      color: var(--muted);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 50px;
+      text-align: left;
+    }
+
+    .feature {
+      display: flex;
+      gap: 20px;
+    }
+
+    .feature-icon {
+      flex: 0 0 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #edf4ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .feature h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* =========================
+       CONTACT
+    ========================= */
+
+    .contact {
+      background: var(--light-bg);
+      padding: 70px 6%;
+    }
+
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .contact-info h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .contact-info > p {
+      color: var(--muted);
+      margin-bottom: 30px;
+      max-width: 450px;
+    }
+
+    .contact-detail {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 18px;
+      color: #344054;
+    }
+
+    .contact-detail-icon {
+      color: var(--primary);
+      font-size: 20px;
+      width: 25px;
+    }
+
+    .contact-form {
+      background: white;
+      padding: 32px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(20, 50, 90, 0.08);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .footer {
+      background: var(--primary-dark);
+      color: white;
+      padding: 55px 6% 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .footer-column h4 {
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    .footer-column a {
+      display: block;
+      margin-bottom: 10px;
+      color: #d6e3f5;
+      font-size: 14px;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-links a {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 25px;
+      font-size: 13px;
+      color: #c8d7ea;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+      .nav {
+        gap: 15px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header {
+        padding: 0 20px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: 500px;
+        padding: 50px 20px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .about,
+      .contact {
+        padding: 50px 20px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        padding: 45px 20px 25px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <div class="phone-frame">
-    <div class="notch"></div>
-    <div class="banner-container" id="banner"></div>
-    <div class="accordion">
-      <div class="accordion-header"><span>▼</span></div>
-      <div class="accordion-content" id="accordionContent">
-        <label>Custom Variable:</label><br>
-        <input type="text" placeholder="Key" id="customKey"><br>
-        <input type="text" placeholder="Value" id="customValue"><br>
-        <button class="save-button" onclick="saveCustomVariable()">Save</button>
-        <button class="save-button" onclick="refreshUserId()" style="background: #FF9800; margin-left: 10px;">Refresh User ID</button>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-icon" id="logoIcon"></span>
+      <span id="logoText"></span>
+    </a>
+
+    <nav class="nav" id="navigation"></nav>
+  </header>
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <section class="hero" id="heroSection">
+    <div class="hero-content">
+      <h1 id="heroTitle"></h1>
+      <p id="heroDescription"></p>
+
+      <div class="hero-actions">
+        <a href="#" class="primary-btn" id="heroPrimaryButton"></a>
+        <a href="#" class="secondary-btn" id="heroSecondaryButton"></a>
       </div>
     </div>
-  </div>
+  </section>
+
+
+  <!-- =========================
+       ABOUT
+  ========================== -->
+
+  <section class="about">
+    <div class="section-label" id="aboutLabel"></div>
+    <h2 id="aboutTitle"></h2>
+    <p class="about-intro" id="aboutDescription"></p>
+
+    <div class="features" id="features"></div>
+  </section>
+
+
+  <!-- =========================
+       CONTACT
+  ========================== -->
+
+  <section class="contact">
+    <div class="contact-wrapper">
+
+      <div class="contact-info">
+        <div class="section-label" id="contactLabel"></div>
+
+        <h2 id="contactTitle"></h2>
+
+        <p id="contactDescription"></p>
+
+        <div id="contactDetails"></div>
+      </div>
+
+
+      <form class="contact-form" id="contactForm">
+
+        <div class="form-row">
+
+          <div class="form-group">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder=""
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder=""
+            />
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder=""
+          />
+        </div>
+
+        <div class="form-group">
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            placeholder=""
+          />
+        </div>
+
+        <div class="form-group">
+          <textarea
+            id="message"
+            name="message"
+            placeholder=""
+          ></textarea>
+        </div>
+
+        <button type="submit" class="form-submit" id="formSubmit"></button>
+
+      </form>
+
+    </div>
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="footer">
+
+    <div class="footer-grid">
+
+      <div>
+        <div class="footer-logo" id="footerLogo"></div>
+        <p id="footerCopyright"></p>
+      </div>
+
+      <div class="footer-column">
+        <h4 id="quickLinksTitle"></h4>
+        <div id="quickLinks"></div>
+      </div>
+
+      <div class="footer-column">
+        <h4 id="servicesTitle"></h4>
+        <div id="services"></div>
+      </div>
+
+      <div class="footer-column">
+        <h4 id="socialTitle"></h4>
+        <div class="social-links" id="socialLinks"></div>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =========================
+       JSON CONTENT
+  ========================== -->
 
   <script>
 
-    let currentUserId = null;
+    const pageContent = {
 
-    function generateRandomUserId() {
-      return '' + Math.random().toString(36).substring(2, 12);
-    }
-    function getUserId() { return currentUserId; }
+      "site": {
+        "logo": "BrandName",
+        "logoIcon": "◆",
+        "title": "BrandName"
+      },
 
-    async function refreshUserId() {
-      console.clear();
-      const newId = generateRandomUserId();
-      currentUserId = newId;
-      localStorage.removeItem('customVariables');
-      const keyEl = document.getElementById('customKey');
-      const valEl = document.getElementById('customValue');
-      if (keyEl) keyEl.value = '';
-      if (valEl) valEl.value = '';
-      // Re-initialize SDK to ensure latest flags are fetched for the refreshed user
-      try {
-        await window.VWOSetup.reinitializeClient();
-      } catch (e) {
-        console.error('Error reinitializing VWO client on user refresh:', e);
+
+      "navigation": [
+        {
+          "label": "Home",
+          "url": "#"
+        },
+        {
+          "label": "About",
+          "url": "#about"
+        },
+        {
+          "label": "Services",
+          "url": "#services"
+        },
+        {
+          "label": "Features",
+          "url": "#features"
+        },
+        {
+          "label": "Contact",
+          "url": "#contact"
+        },
+        {
+          "label": "Get Started",
+          "url": "#contact",
+          "isCTA": true
+        }
+      ],
+
+
+      "hero": {
+        "backgroundImage":
+          "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80",
+
+        "title":
+          "Build Your Business With Confidence",
+
+        "description":
+          "We help companies grow by delivering innovative solutions that drive measurable results.",
+
+        "primaryButton": {
+          "label": "Learn More",
+          "url": "#about"
+        },
+
+        "secondaryButton": {
+          "label": "Our Services →",
+          "url": "#services"
+        }
+      },
+
+
+      "about": {
+        "label": "ABOUT US",
+
+        "title":
+          "We Are Here to Help Your Business Thrive",
+
+        "description":
+          "We are a team of passionate professionals delivering modern solutions to help your business grow, reach more customers and stay ahead.",
+
+        "features": [
+          {
+            "icon": "🚀",
+            "title": "Innovative Solutions",
+            "description":
+              "We use the latest technologies to build solutions that solve real business problems."
+          },
+          {
+            "icon": "🛡",
+            "title": "Reliable & Secure",
+            "description":
+              "Your data is safe with us. We follow industry best practices to ensure security and reliability."
+          },
+          {
+            "icon": "🎧",
+            "title": "Dedicated Support",
+            "description":
+              "Our support team is always ready to help you at every step of your journey."
+          }
+        ]
+      },
+
+
+      "contact": {
+
+        "label": "GET IN TOUCH",
+
+        "title": "Let's Work Together",
+
+        "description":
+          "Have a project in mind or want to learn more about our services? Fill out the form and we'll get back to you as soon as possible.",
+
+        "details": [
+          {
+            "icon": "📍",
+            "value": "123 Business Street, Suite 100\nNew York, NY 10001"
+          },
+          {
+            "icon": "✉",
+            "value": "info@brandname.com"
+          },
+          {
+            "icon": "📞",
+            "value": "+1 (555) 123-4567"
+          }
+        ],
+
+        "form": {
+          "namePlaceholder": "Your Name",
+          "emailPlaceholder": "Your Email",
+          "phonePlaceholder": "Phone Number",
+          "subjectPlaceholder": "Subject",
+          "messagePlaceholder": "Your Message",
+          "submitButton": "Send Message"
+        }
+      },
+
+
+      "footer": {
+
+        "logo": "BrandName",
+
+        "copyright":
+          "© 2024 BrandName. All rights reserved.",
+
+        "quickLinks": {
+          "title": "Quick Links",
+          "links": [
+            {
+              "label": "Home",
+              "url": "#"
+            },
+            {
+              "label": "About",
+              "url": "#about"
+            },
+            {
+              "label": "Services",
+              "url": "#services"
+            },
+            {
+              "label": "Features",
+              "url": "#features"
+            },
+            {
+              "label": "Contact",
+              "url": "#contact"
+            }
+          ]
+        },
+
+        "services": {
+          "title": "Services",
+          "links": [
+            {
+              "label": "Web Design",
+              "url": "#"
+            },
+            {
+              "label": "Development",
+              "url": "#"
+            },
+            {
+              "label": "Marketing",
+              "url": "#"
+            },
+            {
+              "label": "SEO Optimization",
+              "url": "#"
+            },
+            {
+              "label": "Support",
+              "url": "#"
+            }
+          ]
+        },
+
+        "social": {
+          "title": "Follow Us",
+          "links": [
+            {
+              "label": "f",
+              "url": "#"
+            },
+            {
+              "label": "𝕏",
+              "url": "#"
+            },
+            {
+              "label": "in",
+              "url": "#"
+            },
+            {
+              "label": "◎",
+              "url": "#"
+            }
+          ]
+        }
       }
-      await initBanner();
-    }
+    };
 
-    async function handleCtaClick(event, link) {
-      event.preventDefault();
-      try {
-        const client = await window.VWOSetup.getVWOClient();
-        const userContext = window.VWOSetup.buildUserContext(getUserId());
-        console.log('trackEvent: ctaClick', { link, userContext });
-        await client.trackEvent('ctaClick', userContext, { link });
-      } catch (error) {
-        console.error('Error tracking ctaClick:', error);
-      } finally {
-        if (link) window.location.href = link;
-      }
-    }
 
-    function renderBanner(cfg) {
-      const CUSTOMER_NAME = 'John';
-      const AMOUNT = '1,00,000';
-      const h1Text = cfg.bannerTextH1.replace('${CUSTOMER_NAME}', CUSTOMER_NAME);
-      const h2Text = cfg.bannerTextH2.replace('${AMOUNT}', AMOUNT);
-      const imageUrl = cfg.bannerUrlAndroid;
+    /* =========================
+       RENDER CONTENT FROM JSON
+    ========================== */
 
-      document.getElementById('banner').innerHTML = `
-        <div class="banner-card">
-          <img src="${imageUrl}" alt="Banner" onerror="this.style.display='none'">
-          <div class="banner-text">
-            <h1 style="color: ${cfg.bannerTextH1Color};">${h1Text}</h1>
-            <p style="color: ${cfg.bannerTextH2Color};">${h2Text}</p>
-            <a href="${cfg.buttonLink}" class="cta-button" data-link="${cfg.buttonLink}" onclick="handleCtaClick(event, this.dataset.link)">${cfg.CTAText}</a>
+    function renderPage(data) {
+
+      /* Site / Logo */
+
+      document.getElementById("logoText").textContent =
+        data.site.logo;
+
+      document.getElementById("logoIcon").textContent =
+        data.site.logoIcon;
+
+      document.getElementById("footerLogo").textContent =
+        data.footer.logo;
+
+
+      /* Navigation */
+
+      const navigation =
+        document.getElementById("navigation");
+
+      navigation.innerHTML = "";
+
+      data.navigation.forEach(item => {
+
+        const link = document.createElement("a");
+
+        link.href = item.url;
+        link.textContent = item.label;
+
+        if (item.isCTA) {
+          link.classList.add("nav-cta");
+        }
+
+        navigation.appendChild(link);
+      });
+
+
+      /* Hero */
+
+      const hero = data.hero;
+
+      document.getElementById("heroSection")
+        .style.backgroundImage =
+        `url("${hero.backgroundImage}")`;
+
+      document.getElementById("heroTitle")
+        .textContent = hero.title;
+
+      document.getElementById("heroDescription")
+        .textContent = hero.description;
+
+      const primaryButton =
+        document.getElementById("heroPrimaryButton");
+
+      primaryButton.textContent =
+        hero.primaryButton.label;
+
+      primaryButton.href =
+        hero.primaryButton.url;
+
+
+      const secondaryButton =
+        document.getElementById("heroSecondaryButton");
+
+      secondaryButton.textContent =
+        hero.secondaryButton.label;
+
+      secondaryButton.href =
+        hero.secondaryButton.url;
+
+
+      /* About */
+
+      document.getElementById("aboutLabel")
+        .textContent = data.about.label;
+
+      document.getElementById("aboutTitle")
+        .textContent = data.about.title;
+
+      document.getElementById("aboutDescription")
+        .textContent = data.about.description;
+
+
+      const featuresContainer =
+        document.getElementById("features");
+
+      featuresContainer.innerHTML = "";
+
+      data.about.features.forEach(feature => {
+
+        const featureElement =
+          document.createElement("div");
+
+        featureElement.className = "feature";
+
+        featureElement.innerHTML = `
+          <div class="feature-icon">
+            ${feature.icon}
           </div>
-        </div>`;
+
+          <div>
+            <h3>${feature.title}</h3>
+            <p>${feature.description}</p>
+          </div>
+        `;
+
+        featuresContainer.appendChild(featureElement);
+      });
+
+
+      /* Contact */
+
+      document.getElementById("contactLabel")
+        .textContent = data.contact.label;
+
+      document.getElementById("contactTitle")
+        .textContent = data.contact.title;
+
+      document.getElementById("contactDescription")
+        .textContent = data.contact.description;
+
+
+      const contactDetails =
+        document.getElementById("contactDetails");
+
+      contactDetails.innerHTML = "";
+
+      data.contact.details.forEach(detail => {
+
+        const element =
+          document.createElement("div");
+
+        element.className = "contact-detail";
+
+        element.innerHTML = `
+          <div class="contact-detail-icon">
+            ${detail.icon}
+          </div>
+
+          <div>
+            ${detail.value.replace(/\n/g, "<br>")}
+          </div>
+        `;
+
+        contactDetails.appendChild(element);
+      });
+
+
+      /* Form */
+
+      const form = data.contact.form;
+
+      document.getElementById("name")
+        .placeholder = form.namePlaceholder;
+
+      document.getElementById("email")
+        .placeholder = form.emailPlaceholder;
+
+      document.getElementById("phone")
+        .placeholder = form.phonePlaceholder;
+
+      document.getElementById("subject")
+        .placeholder = form.subjectPlaceholder;
+
+      document.getElementById("message")
+        .placeholder = form.messagePlaceholder;
+
+      document.getElementById("formSubmit")
+        .textContent = form.submitButton;
+
+
+      /* Footer */
+
+      document.getElementById("footerCopyright")
+        .textContent = data.footer.copyright;
+
+      document.getElementById("quickLinksTitle")
+        .textContent = data.footer.quickLinks.title;
+
+      document.getElementById("servicesTitle")
+        .textContent = data.footer.services.title;
+
+      document.getElementById("socialTitle")
+        .textContent = data.footer.social.title;
+
+
+      /* Footer Quick Links */
+
+      const quickLinks =
+        document.getElementById("quickLinks");
+
+      quickLinks.innerHTML = "";
+
+      data.footer.quickLinks.links.forEach(item => {
+
+        const link = document.createElement("a");
+
+        link.href = item.url;
+        link.textContent = item.label;
+
+        quickLinks.appendChild(link);
+      });
+
+
+      /* Footer Services */
+
+      const services =
+        document.getElementById("services");
+
+      services.innerHTML = "";
+
+      data.footer.services.links.forEach(item => {
+
+        const link = document.createElement("a");
+
+        link.href = item.url;
+        link.textContent = item.label;
+
+        services.appendChild(link);
+      });
+
+
+      /* Social Links */
+
+      const socialLinks =
+        document.getElementById("socialLinks");
+
+      socialLinks.innerHTML = "";
+
+      data.footer.social.links.forEach(item => {
+
+        const link = document.createElement("a");
+
+        link.href = item.url;
+        link.textContent = item.label;
+
+        socialLinks.appendChild(link);
+      });
     }
 
 
+    /* =========================
+       FORM HANDLER
+    ========================== */
 
-    function renderError(message) {
-      document.getElementById('banner').innerHTML = `
-        <div class="error-message">
-          <strong>Error:</strong> ${message}
-        </div>
-      `;
-    }
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", function(event) {
 
-    async function initBanner() {
-      try {
-        const client = await window.VWOSetup.getVWOClient();
-        const userContext = window.VWOSetup.buildUserContext(getUserId());
-        console.log('userContext:', userContext);
-        const flagName = window.VWOSetup.getFlagKey();
-        const flag = await client.getFlag(flagName, userContext);
-        console.log('getFlag:', flag);
-        if (!flag) {
-          console.error('No flag found for key', flagName);
-          renderError('No feature flag found. Please check your VWO configuration.');
-          return;
-        }
-        if (flag.isEnabled()) {          
-          const allVariables = flag.getVariables();
-          console.log('getVariables:', allVariables);
-          const bannerTextH1 = flag.getVariable('bannerTextH1', 'Banking Made Simple');
-          const bannerTextH2 = flag.getVariable('bannerTextH2', 'Manage your money, track expenses, and save smarter - all in one place.');
-          const bannerTextH1Color = flag.getVariable('bannerTextH1Color', '#1A237E');
-          const bannerTextH2Color = flag.getVariable('bannerTextH2Color', '#424242');
-          const bannerUrlAndroid = flag.getVariable('bannerUrlAndroid', 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');
-          const buttonLink = flag.getVariable('buttonLink', '#');
-          const CTAText = flag.getVariable('CTAText', 'Get Started');
+        event.preventDefault();
 
-          // Create config object from flag variables
-          const config = {
-            bannerTextH1,
-            bannerTextH2,
-            bannerTextH1Color,
-            bannerTextH2Color,
-            bannerUrlAndroid,
-            buttonLink,
-            CTAText
-          };
-          
-          renderBanner(config);
-        } else {
-          document.getElementById('banner').innerHTML = '';
-        }
-        
-      } catch (error) {
-        console.error('Error initializing banner:', error);
-        renderError(`Failed to load banner configuration from VWO SDK: ${error.message}`);
-      }
-    }
+        alert("Thank you! Your message has been submitted.");
 
-    function toggleAccordion() {
-      const content = document.getElementById("accordionContent");
-      const header = document.querySelector(".accordion-header");
-      content.style.display = content.style.display === "block" ? "none" : "block";
-      header.classList.toggle("active");
-    }
+      });
 
-    async function saveCustomVariable() {
-      const key = document.getElementById('customKey').value.trim();
-      const value = document.getElementById('customValue').value.trim();
-      
-      if (!key || !value) {
-        alert('Please enter both key and value');
-        return;
-      }
-      const customVariables = JSON.parse(localStorage.getItem('customVariables') || '{}');
-      customVariables[key] = value;
-      localStorage.setItem('customVariables', JSON.stringify(customVariables));
-      // Also refresh userId when custom variable is added
-      const newId = generateRandomUserId();
-      currentUserId = newId;
-      // Re-initialize SDK so latest flags are fetched for new user context
-      try {
-        await window.VWOSetup.reinitializeClient();
-      } catch (e) {
-        console.error('Error reinitializing VWO client after saving custom variable:', e);
-      }
-      await initBanner();
-      alert(`Saved: ${key} = ${value}`);
-      document.getElementById('customKey').value = '';
-      document.getElementById('customValue').value = '';
-    }
 
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', async () => {
-      currentUserId = generateRandomUserId();
-      await initBanner();
-    });
+    /* =========================
+       INITIALIZE PAGE
+    ========================== */
+
+    renderPage(pageContent);
+
   </script>
+
 </body>
 </html>
