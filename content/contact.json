@@ -1,0 +1,61 @@
+{
+  "sectionLabel": "GET IN TOUCH",
+  "title": "Let's Work Together",
+  "description": "Have a project in mind or want to learn more about our services? Fill out the form and we'll get back to you as soon as possible.",
+  "details": [
+    {
+      "type": "address",
+      "icon": "📍",
+      "value": "123 Business Street, Suite 100",
+      "secondaryValue": "New York, NY 10001"
+    },
+    {
+      "type": "email",
+      "icon": "✉",
+      "value": "info@brandname.com"
+    },
+    {
+      "type": "phone",
+      "icon": "📞",
+      "value": "+1 (555) 123-4567"
+    }
+  ],
+  "form": {
+    "fields": [
+      {
+        "name": "name",
+        "type": "text",
+        "placeholder": "Your Name",
+        "required": true
+      },
+      {
+        "name": "email",
+        "type": "email",
+        "placeholder": "Your Email",
+        "required": true
+      },
+      {
+        "name": "phone",
+        "type": "tel",
+        "placeholder": "Phone Number",
+        "required": false
+      },
+      {
+        "name": "subject",
+        "type": "text",
+        "placeholder": "Subject",
+        "required": false
+      },
+      {
+        "name": "message",
+        "type": "textarea",
+        "placeholder": "Your Message",
+        "required": true
+      }
+    ],
+    "submitButton": {
+      "label": "Send Message"
+    },
+    "successMessage": "Thank you! Your message has been submitted."
+  }
+}

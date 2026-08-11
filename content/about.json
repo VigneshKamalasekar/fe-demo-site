@@ -1,0 +1,22 @@
+{
+  "sectionLabel": "ABOUT US",
+  "title": "We Are Here to Help Your Business Thrive",
+  "description": "We are a team of passionate professionals delivering modern solutions to help your business grow, reach more customers and stay ahead.",
+  "features": [
+    {
+      "icon": "🚀",
+      "title": "Innovative Solutions",
+      "description": "We use the latest technologies to build solutions that solve real business problems."
+    },
+    {
+      "icon": "🛡",
+      "title": "Reliable & Secure",
+      "description": "Your data is safe with us. We follow industry best practices to ensure security and reliability."
+    },
+    {
+      "icon": "🎧",
+      "title": "Dedicated Support",
+      "description": "Our support team is always ready to help you at every step of your journey."
+    }
+  ]
+}

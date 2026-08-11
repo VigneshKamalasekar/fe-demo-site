@@ -1,0 +1,84 @@
+{
+  "logo": {
+    "text": "BrandName",
+    "icon": "◆"
+  },
+  "copyright": "© 2026 BrandName. All rights reserved.",
+  "columns": [
+    {
+      "title": "Quick Links",
+      "links": [
+        {
+          "label": "Home",
+          "url": "#"
+        },
+        {
+          "label": "About",
+          "url": "#about"
+        },
+        {
+          "label": "Services",
+          "url": "#services"
+        },
+        {
+          "label": "Features",
+          "url": "#features"
+        },
+        {
+          "label": "Contact",
+          "url": "#contact"
+        }
+      ]
+    },
+    {
+      "title": "Services",
+      "links": [
+        {
+          "label": "Web Design",
+          "url": "#"
+        },
+        {
+          "label": "Development",
+          "url": "#"
+        },
+        {
+          "label": "Marketing",
+          "url": "#"
+        },
+        {
+          "label": "SEO Optimization",
+          "url": "#"
+        },
+        {
+          "label": "Support",
+          "url": "#"
+        }
+      ]
+    }
+  ],
+  "social": {
+    "title": "Follow Us",
+    "links": [
+      {
+        "platform": "Facebook",
+        "label": "f",
+        "url": "#"
+      },
+      {
+        "platform": "Twitter",
+        "label": "𝕏",
+        "url": "#"
+      },
+      {
+        "platform": "LinkedIn",
+        "label": "in",
+        "url": "#"
+      },
+      {
+        "platform": "Instagram",
+        "label": "◎",
+        "url": "#"
+      }
+    ]
+  }
+}
