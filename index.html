@@ -1,1 +1,318 @@
-hello world
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VWO Demo App</title>
+  <!-- VWO FME SDK (Client-side) -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vwo-fme-node-sdk@1/dist/client/vwo-fme-javascript-sdk.min.js"></script>
+  <!-- Configuration and setup -->
+  <script src="./vwo-config.js"></script>
+  <script src="./vwo-setup.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .phone-frame {
+      width: 375px;
+      height: 667px;
+      border: 16px solid #333;
+      border-radius: 36px;
+      background-color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .notch {
+      width: 210px;
+      height: 30px;
+      background-color: #333;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .banner-container {
+      margin-top: 40px;
+      padding: 15px 15px 25px 15px;
+      box-sizing: border-box;
+    }
+    .banner-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .banner-container img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+    .banner-text {
+      padding: 16px 20px 20px 20px;
+      text-align: center;
+      background: white;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .banner-text h1 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .banner-text p {
+      margin: 0 0 16px 0;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      background: #4285F4;
+      transition: background-color 0.2s;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
+    }
+    .cta-button:hover {
+      background: #3367D6;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.4);
+    }
+    .accordion {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    .accordion-header {
+      background-color: #e0e0e0;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .accordion-content {
+      display: none;
+      padding: 10px;
+      background-color: #f9f9f9;
+    }
+    .accordion-content input {
+      width: 90%;
+      margin: 5px 0;
+      padding: 5px;
+    }
+    .save-button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    .save-button:hover {
+      background: #45a049;
+    }
+    .error-message {
+      color: #d32f2f;
+      text-align: center;
+      padding: 20px;
+      background-color: #ffebee;
+      border-radius: 4px;
+      margin: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="banner-container" id="banner"></div>
+    <div class="accordion">
+      <div class="accordion-header"><span>▼</span></div>
+      <div class="accordion-content" id="accordionContent">
+        <label>Custom Variable:</label><br>
+        <input type="text" placeholder="Key" id="customKey"><br>
+        <input type="text" placeholder="Value" id="customValue"><br>
+        <button class="save-button" onclick="saveCustomVariable()">Save</button>
+        <button class="save-button" onclick="refreshUserId()" style="background: #FF9800; margin-left: 10px;">Refresh User ID</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    let currentUserId = null;
+
+    function generateRandomUserId() {
+      return '' + Math.random().toString(36).substring(2, 12);
+    }
+    function getUserId() { return currentUserId; }
+
+    async function refreshUserId() {
+      console.clear();
+      const newId = generateRandomUserId();
+      currentUserId = newId;
+      localStorage.removeItem('customVariables');
+      const keyEl = document.getElementById('customKey');
+      const valEl = document.getElementById('customValue');
+      if (keyEl) keyEl.value = '';
+      if (valEl) valEl.value = '';
+      // Re-initialize SDK to ensure latest flags are fetched for the refreshed user
+      try {
+        await window.VWOSetup.reinitializeClient();
+      } catch (e) {
+        console.error('Error reinitializing VWO client on user refresh:', e);
+      }
+      await initBanner();
+    }
+
+    async function handleCtaClick(event, link) {
+      event.preventDefault();
+      try {
+        const client = await window.VWOSetup.getVWOClient();
+        const userContext = window.VWOSetup.buildUserContext(getUserId());
+        console.log('trackEvent: ctaClick', { link, userContext });
+        await client.trackEvent('ctaClick', userContext, { link });
+      } catch (error) {
+        console.error('Error tracking ctaClick:', error);
+      } finally {
+        if (link) window.location.href = link;
+      }
+    }
+
+    function renderBanner(cfg) {
+      const CUSTOMER_NAME = 'John';
+      const AMOUNT = '1,00,000';
+      const h1Text = cfg.bannerTextH1.replace('${CUSTOMER_NAME}', CUSTOMER_NAME);
+      const h2Text = cfg.bannerTextH2.replace('${AMOUNT}', AMOUNT);
+      const imageUrl = cfg.bannerUrlAndroid;
+
+      document.getElementById('banner').innerHTML = `
+        <div class="banner-card">
+          <img src="${imageUrl}" alt="Banner" onerror="this.style.display='none'">
+          <div class="banner-text">
+            <h1 style="color: ${cfg.bannerTextH1Color};">${h1Text}</h1>
+            <p style="color: ${cfg.bannerTextH2Color};">${h2Text}</p>
+            <a href="${cfg.buttonLink}" class="cta-button" data-link="${cfg.buttonLink}" onclick="handleCtaClick(event, this.dataset.link)">${cfg.CTAText}</a>
+          </div>
+        </div>`;
+    }
+
+
+
+    function renderError(message) {
+      document.getElementById('banner').innerHTML = `
+        <div class="error-message">
+          <strong>Error:</strong> ${message}
+        </div>
+      `;
+    }
+
+    async function initBanner() {
+      try {
+        const client = await window.VWOSetup.getVWOClient();
+        const userContext = window.VWOSetup.buildUserContext(getUserId());
+        console.log('userContext:', userContext);
+        const flagName = window.VWOSetup.getFlagKey();
+        const flag = await client.getFlag(flagName, userContext);
+        console.log('getFlag:', flag);
+        if (!flag) {
+          console.error('No flag found for key', flagName);
+          renderError('No feature flag found. Please check your VWO configuration.');
+          return;
+        }
+        if (flag.isEnabled()) {          
+          const allVariables = flag.getVariables();
+          console.log('getVariables:', allVariables);
+          const bannerTextH1 = flag.getVariable('bannerTextH1', 'Banking Made Simple');
+          const bannerTextH2 = flag.getVariable('bannerTextH2', 'Manage your money, track expenses, and save smarter - all in one place.');
+          const bannerTextH1Color = flag.getVariable('bannerTextH1Color', '#1A237E');
+          const bannerTextH2Color = flag.getVariable('bannerTextH2Color', '#424242');
+          const bannerUrlAndroid = flag.getVariable('bannerUrlAndroid', 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');
+          const buttonLink = flag.getVariable('buttonLink', '#');
+          const CTAText = flag.getVariable('CTAText', 'Get Started');
+
+          // Create config object from flag variables
+          const config = {
+            bannerTextH1,
+            bannerTextH2,
+            bannerTextH1Color,
+            bannerTextH2Color,
+            bannerUrlAndroid,
+            buttonLink,
+            CTAText
+          };
+          
+          renderBanner(config);
+        } else {
+          document.getElementById('banner').innerHTML = '';
+        }
+        
+      } catch (error) {
+        console.error('Error initializing banner:', error);
+        renderError(`Failed to load banner configuration from VWO SDK: ${error.message}`);
+      }
+    }
+
+    function toggleAccordion() {
+      const content = document.getElementById("accordionContent");
+      const header = document.querySelector(".accordion-header");
+      content.style.display = content.style.display === "block" ? "none" : "block";
+      header.classList.toggle("active");
+    }
+
+    async function saveCustomVariable() {
+      const key = document.getElementById('customKey').value.trim();
+      const value = document.getElementById('customValue').value.trim();
+      
+      if (!key || !value) {
+        alert('Please enter both key and value');
+        return;
+      }
+      const customVariables = JSON.parse(localStorage.getItem('customVariables') || '{}');
+      customVariables[key] = value;
+      localStorage.setItem('customVariables', JSON.stringify(customVariables));
+      // Also refresh userId when custom variable is added
+      const newId = generateRandomUserId();
+      currentUserId = newId;
+      // Re-initialize SDK so latest flags are fetched for new user context
+      try {
+        await window.VWOSetup.reinitializeClient();
+      } catch (e) {
+        console.error('Error reinitializing VWO client after saving custom variable:', e);
+      }
+      await initBanner();
+      alert(`Saved: ${key} = ${value}`);
+      document.getElementById('customKey').value = '';
+      document.getElementById('customValue').value = '';
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      currentUserId = generateRandomUserId();
+      await initBanner();
+    });
+  </script>
+</body>
+</html>
