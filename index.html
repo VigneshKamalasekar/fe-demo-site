@@ -6,6 +6,10 @@
   <meta name="description" content="BrandName business landing page">
   <title>BrandName</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- VWO config-->>
+  <script src="js/vwo-config.js"></script>
+  <script src="js/vwo-setup.js"></script>
+
 </head>
 <body>
 
@@ -14,5 +18,106 @@
   </div>
 
   <script src="js/app.js"></script>
+
+  <script>
+
+    let currentUserId = null;
+
+    function generateRandomUserId() {
+      return '' + Math.random().toString(36).substring(2, 12);
+    }
+    function getUserId() { return currentUserId; }
+
+    async function refreshUserId() {
+      console.clear();
+      const newId = generateRandomUserId();
+      currentUserId = newId;
+      localStorage.removeItem('customVariables');
+      const keyEl = document.getElementById('customKey');
+      const valEl = document.getElementById('customValue');
+      if (keyEl) keyEl.value = '';
+      if (valEl) valEl.value = '';
+      // Re-initialize SDK to ensure latest flags are fetched for the refreshed user
+      try {
+        await window.VWOSetup.reinitializeClient();
+      } catch (e) {
+        console.error('Error reinitializing VWO client on user refresh:', e);
+      }
+      await initBanner();
+    }
+
+    async function initBanner() {
+      try {
+        const client = await window.VWOSetup.getVWOClient();
+        const userContext = window.VWOSetup.buildUserContext(getUserId());
+        console.log('userContext:', userContext);
+        const flagName = window.VWOSetup.getFlagKey();
+        const flag = await client.getFlag(flagName, userContext);
+        console.log('getFlag:', flag);
+        if (!flag) {
+          console.error('No flag found for key', flagName);
+          renderError('No feature flag found. Please check your VWO configuration.');
+          return;
+        }
+        if (flag.isEnabled()) {          
+          const allVariables = flag.getVariables();
+          console.log('getVariables:', allVariables);
+
+          // Create config object from flag variables
+          const config = {
+            bannerTextH1,
+            bannerTextH2,
+            bannerTextH1Color,
+            bannerTextH2Color,
+            bannerUrlAndroid,
+            buttonLink,
+            CTAText
+          };
+          
+          renderBanner(config);
+        } else {
+          document.getElementById('banner').innerHTML = '';
+        }
+        
+      } catch (error) {
+        console.error('Error initializing banner:', error);
+        renderError(`Failed to load banner configuration from VWO SDK: ${error.message}`);
+      }
+    }
+
+
+
+    async function saveCustomVariable() {
+      const key = document.getElementById('customKey').value.trim();
+      const value = document.getElementById('customValue').value.trim();
+      
+      if (!key || !value) {
+        alert('Please enter both key and value');
+        return;
+      }
+      const customVariables = JSON.parse(localStorage.getItem('customVariables') || '{}');
+      customVariables[key] = value;
+      localStorage.setItem('customVariables', JSON.stringify(customVariables));
+      // Also refresh userId when custom variable is added
+      const newId = generateRandomUserId();
+      currentUserId = newId;
+      // Re-initialize SDK so latest flags are fetched for new user context
+      try {
+        await window.VWOSetup.reinitializeClient();
+      } catch (e) {
+        console.error('Error reinitializing VWO client after saving custom variable:', e);
+      }
+      await initBanner();
+      alert(`Saved: ${key} = ${value}`);
+      document.getElementById('customKey').value = '';
+      document.getElementById('customValue').value = '';
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      currentUserId = generateRandomUserId();
+      await initBanner();
+    });
+  </script>  
 </body>
 </html>
