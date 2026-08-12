@@ -64,17 +64,6 @@
         if (flag.isEnabled()) {          
           const allVariables = flag.getVariables();
           console.log('getVariables:', allVariables);
-
-          // Create config object from flag variables
-          const config = {
-            bannerTextH1,
-            bannerTextH2,
-            bannerTextH1Color,
-            bannerTextH2Color,
-            bannerUrlAndroid,
-            buttonLink,
-            CTAText
-          };
           
           renderBanner(config);
         } else {
@@ -83,7 +72,6 @@
         
       } catch (error) {
         console.error('Error initializing banner:', error);
-        renderError(`Failed to load banner configuration from VWO SDK: ${error.message}`);
       }
     }
 
